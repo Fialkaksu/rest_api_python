@@ -1,18 +1,3 @@
-"""
-Main module.
-
-This module contains the main FastAPI application and its configuration.
-
-Attributes:
-    app (FastAPI): The FastAPI application instance.
-
-Routes:
-    /api/healthchecker: Healthchecker endpoint.
-    /api/contacts: Contact endpoints.
-    /api/auth: Auth endpoints.
-    /api/users: User endpoints.
-"""
-
 import logging
 
 from fastapi import FastAPI, Request, status
@@ -28,7 +13,7 @@ app = FastAPI()
 origins = [
     "http://localhost:8000",
     "http://127.0.0.1:5500",  # check CORS via live served on VSCode
-    "http://localhost:63342",  # check CORS via live served on PyCharm
+    "http://localhost:63342"  # check CORS via live served on PyCharm
 ]
 
 app.add_middleware(
@@ -42,16 +27,6 @@ app.add_middleware(
 
 @app.exception_handler(RateLimitExceeded)
 async def rate_limit_handler(request: Request, exc: RateLimitExceeded):
-    """
-    Handle rate limit exceeded exception.
-
-    Args:
-        request (Request): The request object.
-        exc (RateLimitExceeded): The rate limit exceeded exception.
-
-    Returns:
-        JSONResponse: A JSON response indicating rate limit exceeded.
-    """
     logger.warning(f"Rate limit exceeded for '{request.client.host}' host.")
     return JSONResponse(
         status_code=status.HTTP_429_TOO_MANY_REQUESTS,

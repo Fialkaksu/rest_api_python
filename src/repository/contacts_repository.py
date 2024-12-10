@@ -1,7 +1,3 @@
-"""
-Module for interacting with the Contact table in the database.
-"""
-
 from datetime import date, timedelta
 from typing import List
 
@@ -14,18 +10,7 @@ from src.schemas import ContactModel
 
 class ContactRepository:
     """
-    A class that provides methods for interacting with the Contact table in the database.
-
-    Attributes:
-        db (AsyncSession): An AsyncSession object connected to the database.
-
-    Methods:
-        get_contacts: Get a list of Contacts owned by `user` with pagination.
-        get_contact_by_id: Get a Contact by its id.
-        create_contact: Create a new Contact with the given attributes.
-        update_contact: Update a Contact with the given attributes.
-        remove_contact: Delete a Contact by its id.
-        is_contact_exists: Check if a Contact with the given attributes already exists.
+    A repository class for Contacts.
     """
 
     def __init__(self, session: AsyncSession):
@@ -33,7 +18,7 @@ class ContactRepository:
         Initialize a ContactRepository.
 
         Args:
-            session: An AsyncSession object connected to the database.
+            session (AsyncSession): An AsyncSession object connected to the database.
         """
         self.db = session
 
@@ -50,12 +35,12 @@ class ContactRepository:
         Get a list of Contacts owned by `user` with pagination.
 
         Args:
-            first_name: The first name of the Contacts to retrieve.
-            last_name: The last name of the Contacts to retrieve.
-            email: The email of the Contacts to retrieve.
-            skip: The number of Notes to skip.
-            limit: The maximum number of Notes to return.
-            user: The owner of the Notes to retrieve.
+            first_name (str): The first name of the Contacts to retrieve.
+            last_name (str): The last name of the Contacts to retrieve.
+            email (str): The email of the Contacts to retrieve.
+            skip (int): The number of Notes to skip.
+            limit (int): The maximum number of Notes to return.
+            user (User): The owner of the Notes to retrieve.
 
         Returns:
             A list of Contacts.
@@ -77,8 +62,8 @@ class ContactRepository:
         Get a Contact by its id.
 
         Args:
-            contact_id: The id of the Note to retrieve.
-            user: The owner of the Contact to retrieve.
+            contact_id (int): The id of the Note to retrieve.
+            user (User): The owner of the Contact to retrieve.
 
         Returns:
             The Contact with the specified id, or None if no such Contact exists.
@@ -92,8 +77,8 @@ class ContactRepository:
         Create a new Contact with the given attributes.
 
         Args:
-            body: A ContactModel with the attributes to assign to the Contact.
-            user: The User who owns the Contact.
+            body (ContactModel): A ContactModel with the attributes to assign to the Contact.
+            user (User): The User who owns the Contact.
 
         Returns:
             A Contact with the assigned attributes.
@@ -111,9 +96,9 @@ class ContactRepository:
         Update a Contact with the given attributes.
 
         Args:
-            contact_id: The id of the Contact to update.
-            body: A ContactModel with the attributes to assign to the Contact.
-            user: The User who owns the Contact.
+            contact_id (int): The id of the Contact to update.
+            body (ContactModel): A ContactModel with the attributes to assign to the Contact.
+            user (User): The User who owns the Contact.
 
         Returns:
             The updated Contact, or None if no Contact with the given id exists.
@@ -131,8 +116,8 @@ class ContactRepository:
         Delete a Contact by its id.
 
         Args:
-            contact_id: The id of the Contact to delete.
-            user: The owner of the Contact to delete.
+            contact_id (int): The id of the Contact to delete.
+            user (User): The owner of the Contact to delete.
 
         Returns:
             The deleted Contact, or None if no Contact with the given id exists.
@@ -150,9 +135,9 @@ class ContactRepository:
         Check if a Contact with the given email or phone number exists.
 
         Args:
-            email: The email of the Contact to check.
-            phone_number: The phone number of the Contact to check.
-            user: The owner of the Contact to check.
+            email (str): The email of the Contact to check.
+            phone_number (str): The phone number of the Contact to check.
+            user (User): The owner of the Contact to check.
 
         Returns:
             True if the Contact exists, False otherwise.
@@ -170,8 +155,8 @@ class ContactRepository:
         Get a list of Contacts with upcoming birthdays.
 
         Args:
-            days: The number of days in the future to check.
-            user: The owner of the Contacts to check.
+            days (int): The number of days in the future to check.
+            user (User): The owner of the Contacts to check.
 
         Returns:
             A list of Contacts with upcoming birthdays.

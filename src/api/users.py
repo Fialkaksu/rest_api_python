@@ -1,11 +1,3 @@
-"""
-Module for interacting with the User table in the database.
-
-Endpoints:
-- GET /users/me: Get the current user.
-- PATCH /users/avatar: Update the avatar of the current user.
-"""
-
 from fastapi import APIRouter, Depends, Request, UploadFile, File
 from slowapi import Limiter
 from slowapi.util import get_remote_address
@@ -14,9 +6,9 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from src.conf.config import settings
 from src.database.db import get_db
 from src.schemas import User
-from src.services.auth import get_current_user
-from src.services.upload_file import UploadFileService
-from src.services.users import UserService
+from src.services.auth_service import get_current_user, get_current_admin_user
+from src.services.upload_file_service import UploadFileService
+from src.services.users_service import UserService
 
 router = APIRouter(prefix="/users", tags=["users"])
 limiter = Limiter(key_func=get_remote_address)
@@ -27,15 +19,36 @@ limiter = Limiter(key_func=get_remote_address)
 )
 @limiter.limit("10 per minute")
 async def me(request: Request, user: User = Depends(get_current_user)):
+    """
+    Function for getting current user
+
+    Args:
+        request (Request): Request
+        user (User, optional): User. Defaults to Depends(get_current_user).
+
+    Returns:
+        User
+    """
     return user
 
 
 @router.patch("/avatar", response_model=User)
 async def update_avatar_user(
     file: UploadFile = File(),
-    user: User = Depends(get_current_user),
+    user: User = Depends(get_current_admin_user),
     db: AsyncSession = Depends(get_db),
 ):
+    """
+    Function for updating user avatar
+
+    Args:
+        file (UploadFile, optional): File. Defaults to File().
+        user (User, optional): User. Defaults to Depends(get_current_admin_user).
+        db (AsyncSession, optional): Database session instance. Defaults to Depends(get_db).
+
+    Returns:
+        User
+    """
     avatar_url = UploadFileService(
         settings.CLD_NAME, settings.CLD_API_KEY, settings.CLD_API_SECRET
     ).upload_file(file, user.username)
